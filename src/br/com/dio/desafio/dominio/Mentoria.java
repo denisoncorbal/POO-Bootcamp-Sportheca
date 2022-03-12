@@ -18,8 +18,15 @@ public class Mentoria extends Conteudo{
 	}
 	
 	@Override
+	@Deprecated
 	protected double calcularXp() {		
 		return XP_PADRAO * 20d;
+	}
+	
+	@Override
+	protected double calcularXp(Double nota) {
+
+		return XP_PADRAO * 20d * nota / 100;
 	}
 		
 }

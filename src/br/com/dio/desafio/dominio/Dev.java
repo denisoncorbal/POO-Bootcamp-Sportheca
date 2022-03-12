@@ -12,33 +12,49 @@ public class Dev {
 	
 	private Set<Conteudo> conteudosConcluidos = new LinkedHashSet<Conteudo>();	
 	
-	protected String getNome() {
+	private Double totalXp = 0d;
+
+	public String getNome() {
 		return nome;
 	}
 
-	protected void setNome(String nome) {
+	public void setNome(String nome) {
 		this.nome = nome;
 	}
 
-	protected Set<Conteudo> getConteudosInscritos() {
+	public Set<Conteudo> getConteudosInscritos() {
 		return conteudosInscritos;
 	}
 
-	protected void setConteudosInscritos(Set<Conteudo> conteudosInscritos) {
+	public void setConteudosInscritos(Set<Conteudo> conteudosInscritos) {
 		this.conteudosInscritos = conteudosInscritos;
 	}
 
-	protected Set<Conteudo> getConteudosConcluidos() {
+	public Set<Conteudo> getConteudosConcluidos() {
 		return conteudosConcluidos;
 	}
 
-	protected void setConteudosConcluidos(Set<Conteudo> conteudosConcluidos) {
+	public void setConteudosConcluidos(Set<Conteudo> conteudosConcluidos) {
 		this.conteudosConcluidos = conteudosConcluidos;
+	}
+	
+	public void setTotalXp(Double xp) {
+		this.totalXp = xp;
+	}
+	
+	public Double getTotalXp() {
+		return this.totalXp;
+	}	
+
+	@Override
+	public String toString() {
+		return "Dev [nome=" + nome + ", conteudosInscritos=" + conteudosInscritos + ", conteudosConcluidos="
+				+ conteudosConcluidos + ", totalXp=" + totalXp + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(conteudosConcluidos, conteudosInscritos, nome);
+		return Objects.hash(conteudosConcluidos, conteudosInscritos, nome, totalXp);
 	}
 
 	@Override
@@ -51,19 +67,22 @@ public class Dev {
 			return false;
 		Dev other = (Dev) obj;
 		return Objects.equals(conteudosConcluidos, other.conteudosConcluidos)
-				&& Objects.equals(conteudosInscritos, other.conteudosInscritos) && Objects.equals(nome, other.nome);
+				&& Objects.equals(conteudosInscritos, other.conteudosInscritos) && Objects.equals(nome, other.nome)
+				&& Objects.equals(totalXp, other.totalXp);
 	}
 
 	public void inscreverBootcamp(Bootcamp bootcamp) {
 		this.conteudosInscritos.addAll(bootcamp.getConteudos());
+		bootcamp.getDevsInscritos().add(this);
 	}
 	
+	@Deprecated
 	public void progredir() {
 		Optional<Conteudo> conteudo = this.conteudosInscritos.stream().findFirst();
 		
 		if(conteudo.isPresent()) {
-			this.conteudosConcluidos.add(conteudo.get());
-			this.conteudosInscritos.remove(conteudo.get());
+			this.conteudosConcluidos.add(conteudo.get());			
+			this.conteudosInscritos.remove(conteudo.get());			
 		}
 		else {
 			System.err.println("Você não está matriculado em nenhum conteúdo!");
@@ -71,6 +90,21 @@ public class Dev {
 		
 	}
 	
+	public void progredir(Double nota) {
+		Optional<Conteudo> conteudo = this.conteudosInscritos.stream().findFirst();
+		
+		if(conteudo.isPresent()) {
+			this.conteudosConcluidos.add(conteudo.get());			
+			this.conteudosInscritos.remove(conteudo.get());
+			this.setTotalXp(this.totalXp + conteudo.get().calcularXp(nota));
+		}
+		else {
+			System.err.println("Você não está matriculado em nenhum conteúdo!");
+		}
+		
+	}
+	
+	@Deprecated
 	public Double calcularTotalXp() {
 		return this.conteudosConcluidos.stream()
 				.mapToDouble(Conteudo :: calcularXp)

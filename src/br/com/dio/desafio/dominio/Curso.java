@@ -17,8 +17,17 @@ public class Curso extends Conteudo{
 	}
 	
 	@Override
+	@Deprecated
 	protected double calcularXp() {
 		return XP_PADRAO * cargaHoraria;
 	}
+	
+	@Override
+	protected double calcularXp(Double nota) {
+		
+		return XP_PADRAO * cargaHoraria * nota / 100;
+	}
+	
+	
 	
 }

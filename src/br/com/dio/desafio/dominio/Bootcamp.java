@@ -1,10 +1,12 @@
 package br.com.dio.desafio.dominio;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Bootcamp {
 	
@@ -20,51 +22,51 @@ public class Bootcamp {
 	
 	private Set<Conteudo> conteudos = new LinkedHashSet<Conteudo>();
 
-	protected String getNome() {
+	public String getNome() {
 		return nome;
 	}
 
-	protected void setNome(String nome) {
+	public void setNome(String nome) {
 		this.nome = nome;
 	}
 
-	protected String getDescricao() {
+	public String getDescricao() {
 		return descricao;
 	}
 
-	protected void setDescricao(String descricao) {
+	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
 
-	protected LocalDate getDataInicial() {
+	public LocalDate getDataInicial() {
 		return dataInicial;
 	}
 
-	protected void setDataInicial(LocalDate dataInicial) {
+	public void setDataInicial(LocalDate dataInicial) {
 		this.dataInicial = dataInicial;
 	}
 
-	protected LocalDate getDataFinal() {
+	public LocalDate getDataFinal() {
 		return dataFinal;
 	}
 
-	protected void setDataFinal(LocalDate dataFinal) {
+	public void setDataFinal(LocalDate dataFinal) {
 		this.dataFinal = dataFinal;
 	}
 
-	protected Set<Dev> getDevsInscritos() {
+	public Set<Dev> getDevsInscritos() {
 		return devsInscritos;
 	}
 
-	protected void setDevsInscritos(Set<Dev> devsInscritos) {
+	public void setDevsInscritos(Set<Dev> devsInscritos) {
 		this.devsInscritos = devsInscritos;
 	}
 
-	protected Set<Conteudo> getConteudos() {
+	public Set<Conteudo> getConteudos() {
 		return conteudos;
 	}
 
-	protected void setConteudos(Set<Conteudo> conteudos) {
+	public void setConteudos(Set<Conteudo> conteudos) {
 		this.conteudos = conteudos;
 	}
 
@@ -85,6 +87,12 @@ public class Bootcamp {
 		return Objects.equals(conteudos, other.conteudos) && Objects.equals(dataFinal, other.dataFinal)
 				&& Objects.equals(dataInicial, other.dataInicial) && Objects.equals(descricao, other.descricao)
 				&& Objects.equals(devsInscritos, other.devsInscritos) && Objects.equals(nome, other.nome);
+	}
+	
+	public Set<Dev> calcularRanking() {
+		return this.devsInscritos.stream()
+				.sorted(Comparator.comparing(Dev::getTotalXp).reversed())
+				.collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
 }

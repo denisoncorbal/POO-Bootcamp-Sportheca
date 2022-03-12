@@ -24,6 +24,9 @@ public abstract class Conteudo {
 		this.descricao = descricao;
 	}
 
-	protected abstract double calcularXp();
+	@Deprecated
+	protected abstract double calcularXp();	
+	
+	protected abstract double calcularXp(Double nota);
 	
 }
